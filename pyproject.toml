@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "stock_collect"
+version = "0.1.0"
+description = "It is a service for me to collect my stock information from gmail."
+authors = ["Eileen <lai.eling22@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "3.9.5"
+google-api-python-client = "^2.8.0"
+google-auth-httplib2 = "^0.1.0"
+google-auth-oauthlib = "^0.4.4"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+main = "stock_collect.main:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

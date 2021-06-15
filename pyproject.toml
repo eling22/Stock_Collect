@@ -10,11 +10,16 @@ python = "3.9.5"
 google-api-python-client = "^2.8.0"
 google-auth-httplib2 = "^0.1.0"
 google-auth-oauthlib = "^0.4.4"
+rich = "^10.3.0"
 
 [tool.poetry.dev-dependencies]
+autopep8 = "^1.5.7"
 
 [tool.poetry.scripts]
 main = "stock_collect.main:main"
+
+[tool.autopep8]
+max_line_length = 120
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

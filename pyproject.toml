@@ -13,13 +13,13 @@ google-auth-oauthlib = "^0.4.4"
 rich = "^10.3.0"
 
 [tool.poetry.dev-dependencies]
-autopep8 = "^1.5.7"
+black = "^21.6b0"
+isort = "^5.8.0"
+autoflake = "^1.4"
+mypy = "^0.902"
 
 [tool.poetry.scripts]
 main = "stock_collect.main:main"
-
-[tool.autopep8]
-max_line_length = 120
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

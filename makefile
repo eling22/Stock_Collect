@@ -10,3 +10,5 @@ better :
 	poetry run isort .
 	poetry run mypy .
 
+run:
+	poetry run main

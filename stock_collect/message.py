@@ -32,7 +32,7 @@ class Message:
     def save_data_to_file(self, data):
         file_data = base64.urlsafe_b64decode(data.encode("UTF-8"))
         path = self.attachment_name
-        file_name = self.folder_name + "\\" + path
+        file_name = os.path.join(self.folder_name, path)
 
         if os.path.exists(file_name):
             return

@@ -7,12 +7,11 @@ from stock_collect.gmail_service import GmailService
 
 
 class Message:
-    def __init__(self, gmail: GmailService, id: str) -> None:
+    def __init__(self, id: str) -> None:
         self.folder_name = "att_files"
-        self.gmail = gmail
+        self.gmail = GmailService()
         self.message_id = id
         self.get_message_info(self.message_id)
-        # attachment_id get from get_message_info
         self.get_att_info(self.message_id, self.attachment_id)
 
     def get_message_info(self, id):
@@ -41,7 +40,10 @@ class Message:
             with open(file_name, "wb") as f:
                 f.write(file_data)
         except FileNotFoundError:
-            os.makedirs(self.folder_name)
+            try:
+                os.makedirs(self.folder_name)
+            except FileExistsError:
+                pass
             with open(file_name, "wb") as f:
                 f.write(file_data)
-        print(f"add {path}...")
+        print(f"add {path}...", end="\r")

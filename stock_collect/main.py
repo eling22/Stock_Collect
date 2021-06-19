@@ -1,3 +1,5 @@
+from rich import print
+
 from stock_collect.message import Message
 
 from .gmail_service import GmailService
@@ -8,10 +10,9 @@ def main():
     QUERY_STRING = "玉山證券經紀本部"
 
     gmail = GmailService()
-    msg_list = gmail.get_message_list(QUERY_STRING)
-    messages = msg_list.get("messages", [])
-    # print(len(messages))
-    for msg in messages:
+    msg_list = gmail.get_all_message_id_list(q=QUERY_STRING)
+    print(f"crawl {len(msg_list)} files")
+    for msg in msg_list:
         id = msg["id"]
         msg = Message(gmail, id)
         break

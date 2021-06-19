@@ -1,10 +1,9 @@
 import os.path
-from importlib.resources import Resource
 
 from google.auth.transport.requests import Request  # type: ignore
 from google.oauth2.credentials import Credentials  # type: ignore
 from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
-from googleapiclient.discovery import build  # type: ignore
+from googleapiclient.discovery import Resource, build  # type: ignore
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -41,8 +40,26 @@ class GmailService:
         service = build("gmail", "v1", credentials=creds)
         return service
 
-    def get_message_list(self, q=None):
-        return self.service.users().messages().list(userId=self.user_id, q=q).execute()
+    def get_message_list(self, q=None, pageToken=None):
+        return (
+            self.service.users()
+            .messages()
+            .list(userId=self.user_id, q=q, pageToken=pageToken)
+            .execute()
+        )
+
+    def get_all_message_id_list(self, q=None, pageToken=None):
+        all_msg_list = []
+        msg_list = self.get_message_list(q=q, pageToken=pageToken)
+        all_msg_list.extend(msg_list.get("messages", []))
+        nextPageToken = msg_list.get("nextPageToken", None)
+        while nextPageToken:
+            print(f"crawl {len(all_msg_list)} files", end="\r")
+            msg_list = self.get_message_list(q=q, pageToken=nextPageToken)
+            msg_list.get("nextPageToken", None)
+            all_msg_list.extend(msg_list.get("messages", None))
+            nextPageToken = msg_list.get("nextPageToken", None)
+        return all_msg_list
 
     def get_message(self, id):
         return self.service.users().messages().get(userId=self.user_id, id=id).execute()

@@ -11,6 +11,8 @@ class Message:
         self.folder_name = "att_files"
         self.gmail = GmailService()
         self.message_id = id
+
+    def crawl_data(self):
         self.get_message_info(self.message_id)
         self.get_att_info(self.message_id, self.attachment_id)
 

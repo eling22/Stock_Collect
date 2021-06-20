@@ -7,9 +7,10 @@ from stock_collect.message import Message
 from .gmail_service import GmailService
 
 
-def get_message(msg):
+def crawl_data(msg):
     id = msg["id"]
-    return Message(id)
+    msg = Message(id)
+    msg.crawl_data()
 
 
 def main():
@@ -22,7 +23,7 @@ def main():
     data = [{"gmail": gmail, "id": msg["id"]} for msg in msg_list]
 
     with ThreadPool(5) as p:
-        p.map(get_message, data)
+        p.map(crawl_data, data)
 
     # for msg in msg_list:
     #     id = msg["id"]

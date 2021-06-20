@@ -1,8 +1,6 @@
 import base64
 import os
 
-from rich import print
-
 from stock_collect.gmail_service import GmailService
 
 
@@ -48,4 +46,4 @@ class Message:
                 pass
             with open(file_name, "wb") as f:
                 f.write(file_data)
-        print(f"add {path}...", end="\r")
+        # print(f"add {path}...", end="\r")

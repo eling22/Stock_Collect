@@ -1,59 +1,48 @@
-from multiprocessing import Lock
-from multiprocessing.pool import ThreadPool
+import os
+import warnings
+from os.path import join
 
-from rich import print
-from rich.progress import Progress
+import firebase_admin  # type: ignore
+import pandas as pd  # type: ignore
+from firebase_admin import credentials, firestore
+from pandas.core.frame import DataFrame  # type: ignore
 
-from stock_collect.message import Message
-
-from .gmail_service import GmailService
-
-
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-
-cred = credentials.Certificate("stock-collect-firebase-adminsdk-towjq-475cc7a29e.json")
-firebase_admin.initialize_app(cred)
-
-db = firestore.client()
-dest = {"name": "Eileen", "state": "Taipie", "country": "Taiwan"}
-db.collection("trade_data").add(dest)
+from .message import crawl_excel_files
 
 
-def crawl_data(param):
-    id = param["id"]
-    progress: Progress = param["progress"]
-    task = param["task"]
-    lock = param["lock"]
+def get_trade_data(save_folder: str, save_excel: bool = False) -> DataFrame:
+    df_list = []
+    warnings.simplefilter("ignore")
+    for f in os.listdir(save_folder):
+        path = join(save_folder, f)
+        df = pd.read_excel(path, sheet_name="交易明細", converters={"代碼": str})
+        df_list.append(df)
+    warnings.simplefilter("default")
+    df = pd.concat(df_list).fillna(0)
 
-    msg = Message(id)
-    msg.crawl_data()
-
-    lock.acquire()
-    progress.update(task, advance=1)
-    lock.release()
+    if save_excel:
+        with pd.ExcelWriter("trade_data.xlsx") as writer:
+            df.to_excel(writer, index=False)
+    return df
 
 
 def main():
     # the search string for only show the email with the string
-    # QUERY_STRING = "玉山證券經紀本部"
+    QUERY_STRING = "fugletrade 交易明細"
+    SAVE_FOLDER = "att_files"
+    crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
 
-    # gmail = GmailService()
-    # msg_list = gmail.get_all_message_id_list(q=QUERY_STRING)
-    # print(f"crawl {len(msg_list)} files")
+    df = get_trade_data(SAVE_FOLDER)
+    print(df)
 
-    # with Progress() as progress:
-    #     lock = Lock()
-    #     task = progress.add_task("[red]crawl...", total=len(msg_list))
-    #     data = [
-    #         {"lock": lock, "progress": progress, "task": task, "id": msg["id"]}
-    #         for msg in msg_list
-    #     ]
+    cred = credentials.Certificate(
+        "stock-collect-firebase-adminsdk-towjq-475cc7a29e.json"
+    )
+    firebase_admin.initialize_app(cred)
 
-    #     with ThreadPool(5) as p:
-    #         p.map(crawl_data, data)
-    print("good")
+    db = firestore.client()
+    dest = {"name": "Eileen", "state": "Taipie", "country": "Taiwan"}
+    db.collection("trade_data").add(dest)
 
 
 if __name__ == "__main__":

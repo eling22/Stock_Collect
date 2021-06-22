@@ -2,8 +2,8 @@ import os
 import warnings
 from os.path import join
 
-import pandas as pd
-from pandas.core.frame import DataFrame
+import pandas as pd  # type: ignore
+from pandas.core.frame import DataFrame  # type: ignore
 
 
 def get_trade_data(save_folder: str, save_excel: bool = False) -> DataFrame:

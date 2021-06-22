@@ -25,7 +25,7 @@ def crawl_data(param):
 
 def main():
     # the search string for only show the email with the string
-    QUERY_STRING = "玉山證券經紀本部"
+    QUERY_STRING = "fugletrade 交易明細"
 
     gmail = GmailService()
     msg_list = gmail.get_all_message_id_list(q=QUERY_STRING)

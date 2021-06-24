@@ -30,13 +30,13 @@ def main():
     # the search string for only show the email with the string
     QUERY_STRING = "fugletrade 交易明細"
     SAVE_FOLDER = "att_files"
-    crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
+    # crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
 
     df = get_trade_data(SAVE_FOLDER)
     print(df)
 
     cred = credentials.Certificate(
-        "stock-collect-firebase-adminsdk-towjq-475cc7a29e.json"
+        "stock-collect-firebase-adminsdk.json"
     )
     firebase_admin.initialize_app(cred)
 

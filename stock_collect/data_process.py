@@ -53,5 +53,5 @@ def dump_json(df: DataFrame) -> Any:
 def get_json_from_excel(save_folder: str, save_excel: bool = False) -> Any:
     df = get_dataframe_from_excel(save_folder, save_excel)
     df = filter_for_database(df)
-    json_data = dump_json(df[:5])
+    json_data = dump_json(df)
     return json_data

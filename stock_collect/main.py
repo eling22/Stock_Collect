@@ -1,6 +1,7 @@
 import firebase_admin  # type: ignore
 from firebase_admin import credentials, firestore
 from rich import print
+from rich.progress import track
 
 from .data_process import get_json_from_excel
 from .message import crawl_excel_files
@@ -10,17 +11,29 @@ def main():
     # the search string for only show the email with the string
     QUERY_STRING = "fugletrade 交易明細"
     SAVE_FOLDER = "att_files"
-    # crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
+    crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
 
     data = get_json_from_excel(SAVE_FOLDER)
-    print(data["0"])
 
-    # cred = credentials.Certificate("stock-collect-firebase-adminsdk.json")
-    # firebase_admin.initialize_app(cred)
+    cred = credentials.Certificate("stock-collect-firebase-adminsdk.json")
+    firebase_admin.initialize_app(cred)
 
-    # db = firestore.client()
-    # dest = {"name": "Eileen", "state": "Taipie", "country": "Taiwan"}
-    # db.collection("trade_data").add(dest)
+    db = firestore.client()
+
+    query = (
+        db.collection("eileen_trade_data")
+        .order_by("date", direction=firestore.Query.DESCENDING)
+        .limit(1)
+    )
+    docs = query.stream()
+    lastest_update = next(docs).to_dict()["date"]
+    print("lastest_update", lastest_update)
+
+    data = {k: v for k, v in data.items() if v["date"] > lastest_update}
+
+    print(f"add {len(data)} data to database")
+    for key, value in track(data.items(), description="Upload data..."):
+        db.collection("eileen_trade_data").add(value)
 
 
 if __name__ == "__main__":

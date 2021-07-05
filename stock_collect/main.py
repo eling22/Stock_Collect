@@ -26,7 +26,10 @@ def main():
         .limit(1)
     )
     docs = query.stream()
-    lastest_update = next(docs).to_dict()["date"]
+    try:
+        lastest_update = next(docs).to_dict()["date"]
+    except StopIteration:
+        lastest_update = 0
     print("lastest_update", lastest_update)
 
     data = {k: v for k, v in data.items() if v["date"] > lastest_update}

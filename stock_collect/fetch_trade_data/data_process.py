@@ -50,10 +50,7 @@ def dump_json(df: DataFrame) -> Any:
     return json_data
 
 
-def get_json_from_excel(save_folder: str, save_excel: bool = False) -> Any:
+def get_df_from_excel(save_folder: str, save_excel: bool = False) -> Any:
     df = get_dataframe_from_excel(save_folder, save_excel)
     df = filter_for_database(df)
-    print(df)
-    df.to_csv("trade_data.csv")
-    json_data = dump_json(df)
-    return json_data
+    return df

@@ -1,5 +1,6 @@
 from stock_collect.database.database import DataBase
-from .fetch_trade_data.data_process import get_json_from_excel
+
+from .fetch_trade_data.data_process import dump_json, get_df_from_excel
 from .fetch_trade_data.message import crawl_excel_files
 
 
@@ -11,9 +12,11 @@ def main():
     USER_UID = "z1KBIEE1QFXYzB2lE6f5hI9ArfR2"
     crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
 
-    data = get_json_from_excel(SAVE_FOLDER)
+    df = get_df_from_excel(SAVE_FOLDER)
+    df.to_csv("trade_data.csv")
+    data = dump_json(df)
 
-    db = DataBase()
+    db = DataBase(USER_UID)
     db.add_trade_data(data)
 
 

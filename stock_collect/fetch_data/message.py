@@ -5,7 +5,7 @@ from multiprocessing.pool import ThreadPool
 
 from rich.progress import Progress
 
-from stock_collect.gmail_service import GmailService
+from .gmail_service import GmailService
 
 # can set by crawl_excel_files
 SAVE_FOLDER = "att_files"

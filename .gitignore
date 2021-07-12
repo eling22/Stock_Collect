@@ -3,6 +3,7 @@
 *.xlsx
 .vscode/settings.json
 .DS_Store
+trade_data.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

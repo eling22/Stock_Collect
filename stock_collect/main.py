@@ -5,8 +5,8 @@ from firebase_admin import credentials, firestore
 from rich import print
 from rich.progress import track
 
-from .fetch_data.data_process import get_json_from_excel
-from .fetch_data.message import crawl_excel_files
+from .fetch_trade_data.data_process import get_json_from_excel
+from .fetch_trade_data.message import crawl_excel_files
 
 
 def main():

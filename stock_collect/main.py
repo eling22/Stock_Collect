@@ -1,3 +1,5 @@
+import warnings
+
 import firebase_admin  # type: ignore
 from firebase_admin import credentials, firestore
 from rich import print
@@ -8,6 +10,7 @@ from .message import crawl_excel_files
 
 
 def main():
+
     # the search string for only show the email with the string
     QUERY_STRING = "fugletrade 交易明細"
     SAVE_FOLDER = "att_files"
@@ -26,8 +29,11 @@ def main():
         .limit(1)
     )
     docs = query.stream()
+
     try:
-        lastest_update = next(docs).to_dict()["date"]
+        warnings.simplefilter("ignore", ResourceWarning)
+        for doc in docs:
+            lastest_update = doc.to_dict()["date"]
     except StopIteration:
         lastest_update = 0
     print("lastest_update", lastest_update)

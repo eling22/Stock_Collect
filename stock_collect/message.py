@@ -69,6 +69,8 @@ def crawl_data(param):
     progress.update(task, advance=1)
     lock.release()
 
+    del msg
+
 
 def crawl_excel_files(query_str, save_folder) -> None:
     global SAVE_FOLDER
@@ -85,5 +87,7 @@ def crawl_excel_files(query_str, save_folder) -> None:
             for msg in msg_list
         ]
 
-        with ThreadPool(5) as p:
+        with ThreadPool(100) as p:
             p.map(crawl_data, data)
+
+    del gmail

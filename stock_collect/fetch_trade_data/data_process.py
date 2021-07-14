@@ -50,7 +50,7 @@ def dump_json(df: DataFrame) -> Any:
     return json_data
 
 
-def get_df_from_excel(save_folder: str, save_excel: bool = False) -> Any:
+def get_df_from_excel(save_folder: str, save_excel: bool = False) -> DataFrame:
     df = get_dataframe_from_excel(save_folder, save_excel)
     df = filter_for_database(df)
     return df

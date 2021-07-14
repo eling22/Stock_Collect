@@ -2,6 +2,7 @@ import warnings
 
 import firebase_admin  # type: ignore
 from firebase_admin import credentials, firestore
+from pandas.core.frame import DataFrame
 from rich import print
 from rich.progress import track
 
@@ -42,3 +43,33 @@ class DataBase:
                 .collection("trade_record")
                 .add(value)
             )
+
+    def add_one_trade_data(self, data):
+        self.db.collection("trade_data").document(self.user).collection(
+            "trade_record"
+        ).add(data)
+
+    def get_trade_data(self) -> DataFrame:
+        query = (
+            self.db.collection("trade_data")
+            .document(self.user)
+            .collection("trade_record")
+            .order_by("date")
+        )
+        docs = query.stream()
+
+        df = DataFrame(
+            columns=[
+                "trade_type",
+                "code",
+                "ch_name",
+                "num",
+                "price",
+                "fee",
+                "tax",
+                "date",
+            ]
+        )
+        for doc in docs:
+            df = df.append(doc.to_dict(), ignore_index=True)
+        return df

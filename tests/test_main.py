@@ -2,9 +2,9 @@ import datetime as dt
 from collections import defaultdict
 from typing import DefaultDict, Dict
 
-import matplotlib.dates as mdates
-import matplotlib.pylab as plt
-from matplotlib.ticker import FormatStrFormatter
+import matplotlib.dates as mdates  # type: ignore
+import matplotlib.pylab as plt  # type: ignore
+from matplotlib.ticker import FormatStrFormatter  # type: ignore
 from rich import print
 
 from stock_collect.database.database import DataBase

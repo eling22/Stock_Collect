@@ -1,18 +1,29 @@
 import warnings
+from typing import Any, Dict
 
 import firebase_admin  # type: ignore
 from firebase_admin import credentials, firestore
-from pandas.core.frame import DataFrame
+from pandas.core.frame import DataFrame  # type: ignore
 from rich import print
 from rich.progress import track
 
 
 class DataBase:
-    def __init__(self, user: str) -> None:
+    def __init__(self, user: str = None) -> None:
         cred = credentials.Certificate("stock-collect-firebase-adminsdk.json")
         firebase_admin.initialize_app(cred)
         self.db = firestore.client()
         self.user = user
+
+    def add_stock_data(self, stock_id: str, data: Dict[str, Dict[str, Any]]):
+        for key, value in track(data.items(), description="Upload stock data..."):
+            (
+                self.db.collection("stock")
+                .document(stock_id)
+                .collection("main")
+                .document(key)
+                .set(value)
+            )
 
     def add_trade_data(self, data):
         query = (

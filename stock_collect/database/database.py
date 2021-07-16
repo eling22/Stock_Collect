@@ -1,5 +1,5 @@
 import warnings
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import firebase_admin  # type: ignore
 from firebase_admin import credentials, firestore
@@ -24,6 +24,18 @@ class DataBase:
                 .document(key)
                 .set(value)
             )
+            (
+                self.db.collection("stock")
+                .document(stock_id)
+                .set({"last_update_time": key})
+            )
+
+    def get_record_stock_id_list(self) -> List[str]:
+        docs = self.db.collection("stock").stream()
+        stock_id_list = []
+        for doc in docs:
+            stock_id_list += [str(doc.id)]
+        return stock_id_list
 
     def add_trade_data(self, data):
         query = (

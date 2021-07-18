@@ -1,5 +1,6 @@
 from stock_collect.database.database import DataBase
 
+from .fetch_stock_data.stock_price import StockPrice
 from .fetch_trade_data.data_process import dump_json, get_df_from_excel
 from .fetch_trade_data.message import crawl_excel_files
 
@@ -18,6 +19,10 @@ def main():
 
     db = DataBase(USER_UID)
     db.add_trade_data(data)
+
+    stock = StockPrice(db)
+    list_of_all_stock = df["code"].drop_duplicates().tolist()
+    stock.update(list_of_all_stock)
 
 
 if __name__ == "__main__":

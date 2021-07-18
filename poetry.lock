@@ -453,6 +453,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "multitasking"
+version = "0.0.9"
+description = "Non-blocking Python methods using decorators"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "mypy"
 version = "0.902"
 description = "Optional static typing for Python"
@@ -772,17 +780,6 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
-name = "twstock"
-version = "1.3.1"
-description = "Taiwan Stock Opendata with realtime - twstock"
-category = "main"
-optional = false
-python-versions = ">=3"
-
-[package.dependencies]
-requests = "*"
-
-[[package]]
 name = "typing-extensions"
 version = "3.10.0.0"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -824,10 +821,25 @@ build = ["wheel", "twine"]
 docs = ["sphinx"]
 test = ["pytest", "pytest-cov"]
 
+[[package]]
+name = "yfinance"
+version = "0.1.63"
+description = "Yahoo! Finance market data downloader"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+lxml = ">=4.5.1"
+multitasking = ">=0.0.7"
+numpy = ">=1.15"
+pandas = ">=0.24"
+requests = ">=2.20"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.5"
-content-hash = "8e1c703606318c7131250a3174afb2f2d3b652a15460fa50c213cbdc9f3cf2df"
+content-hash = "1d215c3dec03c22a5803ad6ad4332f8c989ba924abae4ed751748b8eb3193af3"
 
 [metadata.files]
 appdirs = [
@@ -1213,6 +1225,9 @@ msgpack = [
     {file = "msgpack-1.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:d8167b84af26654c1124857d71650404336f4eb5cc06900667a493fc619ddd9f"},
     {file = "msgpack-1.0.2.tar.gz", hash = "sha256:fae04496f5bc150eefad4e9571d1a76c55d021325dcd484ce45065ebbdd00984"},
 ]
+multitasking = [
+    {file = "multitasking-0.0.9.tar.gz", hash = "sha256:b59d99f709d2e17d60ccaa2be09771b6e9ed9391c63f083c0701e724f624d2e0"},
+]
 mypy = [
     {file = "mypy-0.902-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:3f12705eabdd274b98f676e3e5a89f247ea86dc1af48a2d5a2b080abac4e1243"},
     {file = "mypy-0.902-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:2f9fedc1f186697fda191e634ac1d02f03d4c260212ccb018fabbb6d4b03eee8"},
@@ -1512,10 +1527,6 @@ toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
-twstock = [
-    {file = "twstock-1.3.1-py3-none-any.whl", hash = "sha256:bc2b33cd467e6f52538a7227256bf8f9cb214dac3f85e9f8ce386b7cf6061b19"},
-    {file = "twstock-1.3.1.tar.gz", hash = "sha256:2d5114c9c992990f6523489d26136c5e2b2f1c81fd09bb61e386b5166189fdf2"},
-]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
     {file = "typing_extensions-3.10.0.0-py3-none-any.whl", hash = "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"},
@@ -1532,4 +1543,7 @@ urllib3 = [
 xlrd = [
     {file = "xlrd-2.0.1-py2.py3-none-any.whl", hash = "sha256:6a33ee89877bd9abc1158129f6e94be74e2679636b8a205b43b85206c3f0bbdd"},
     {file = "xlrd-2.0.1.tar.gz", hash = "sha256:f72f148f54442c6b056bf931dbc34f986fd0c3b0b6b5a58d013c9aef274d0c88"},
+]
+yfinance = [
+    {file = "yfinance-0.1.63.tar.gz", hash = "sha256:11364fe94f1cf7811c45fc620acb61c8c45fcb88de317c7718bbdbc9c1573a4c"},
 ]

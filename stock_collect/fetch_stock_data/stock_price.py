@@ -1,34 +1,36 @@
-from typing import List
+from datetime import datetime
+from typing import List, Optional
 
-import twstock  # type: ignore
-from rich import print
+import yfinance as yf  # type: ignore
 
 from stock_collect.database.database import DataBase
 
 
 class StockPrice:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, db: DataBase) -> None:
+        self.db = db
 
-    def update(self, db: DataBase, list_of_all_stock: List[str]):
-        print(db.get_record_stock_id_list())
+    def update(self, list_of_all_stock: List[str]):
+        exist_stock = self.db.get_record_stock_id_list()
 
-    def first_to_db(self, stock_id: str):
-        # TODO: stock data first_to_db
-        pass
+        for stock_id in list_of_all_stock:
+            if stock_id in exist_stock:
+                last_update_time_str = self.db.get_last_update_time(stock_id)
+                last_update_time = datetime.strptime(last_update_time_str, "%Y%m%d")
+                self.fetch_from(stock_id, last_update_time)
+            else:
+                self.fetch_from(stock_id, None)
 
-    def update_to_db(self, stock_id: str):
-        # TODO: stock data update_to_db
-        pass
+    def fetch_from(self, stock_id: str, start_date: Optional[datetime]):
+        stock = yf.Ticker(f"{stock_id}.TW")
+        df = stock.history(start=start_date)
+        if len(df) == 0:
+            stock = yf.Ticker(f"{stock_id}.TWO")
+            df = stock.history(start=start_date)
 
-    def run(self):
-        stock_id = "8299"
-        stock = twstock.Stock(stock_id)
-        data = stock.fetch_31()
-        x = {d.date.strftime("%Y%m%d"): dict(d._asdict()) for d in data}
-
-        db = DataBase()
-        db.add_stock_data(stock_id, x)
-
-        # data = stock.fetch_from(2000, 5)
-        print(x)
+        data = {}
+        for index, row in df.iterrows():
+            time = index.strftime("%Y%m%d")
+            data[time] = row.to_dict()
+            data[time]["Date"] = index
+        self.db.add_stock_data(stock_id, data)

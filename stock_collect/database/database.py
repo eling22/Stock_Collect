@@ -16,7 +16,10 @@ class DataBase:
         self.user = user
 
     def add_stock_data(self, stock_id: str, data: Dict[str, Dict[str, Any]]):
-        for key, value in track(data.items(), description="Upload stock data..."):
+        for key, value in track(
+            data.items(), description=f"Saving stock {stock_id} data..."
+        ):
+            print(key)
             (
                 self.db.collection("stock")
                 .document(stock_id)
@@ -29,6 +32,11 @@ class DataBase:
                 .document(stock_id)
                 .set({"last_update_time": key})
             )
+
+    def get_last_update_time(self, stock_id: str):
+        doc = self.db.collection("stock").document(stock_id).get()
+        if doc.exists:
+            return doc.to_dict()["last_update_time"]
 
     def get_record_stock_id_list(self) -> List[str]:
         docs = self.db.collection("stock").stream()

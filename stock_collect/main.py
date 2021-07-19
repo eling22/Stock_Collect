@@ -4,6 +4,8 @@ from .fetch_stock_data.stock_price import StockPrice
 from .fetch_trade_data.data_process import dump_json, get_df_from_excel
 from .fetch_trade_data.message import crawl_excel_files
 
+from google.api_core.exceptions import RetryError
+
 
 def main():
 
@@ -21,8 +23,12 @@ def main():
     db.add_trade_data(data)
 
     stock = StockPrice(db)
-    list_of_all_stock = df["code"].drop_duplicates().tolist()
-    stock.update(list_of_all_stock)
+
+    try:
+        list_of_all_stock = df["code"].drop_duplicates().tolist()
+        stock.update(list_of_all_stock)
+    except RetryError:
+        print("today's quotas is reached, please run tomorrow")
 
 
 if __name__ == "__main__":

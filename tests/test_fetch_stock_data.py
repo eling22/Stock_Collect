@@ -13,5 +13,6 @@ def test_update_stock_price():
     df = get_df_from_excel(SAVE_FOLDER)
     db = DataBase()
     stock = StockPrice(db)
-    list_of_all_stock = df["code"].drop_duplicates().tolist()
+    # list_of_all_stock = df["code"].drop_duplicates().tolist()
+    list_of_all_stock = ["006208"]
     stock.update(list_of_all_stock)

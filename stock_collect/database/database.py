@@ -6,14 +6,24 @@ from firebase_admin import credentials, firestore
 from pandas.core.frame import DataFrame  # type: ignore
 from rich import print
 from rich.progress import track
+from datetime import datetime
 
 
 class DataBase:
+    is_init_db: bool = False
+
     def __init__(self, user: str = None) -> None:
-        cred = credentials.Certificate("stock-collect-firebase-adminsdk.json")
-        firebase_admin.initialize_app(cred)
+        if not DataBase.is_init_db:
+            print("init_db")
+            DataBase.init_db()
+            DataBase.is_init_db = True
         self.db = firestore.client()
         self.user = user
+
+    @staticmethod
+    def init_db():
+        cred = credentials.Certificate("stock-collect-firebase-adminsdk.json")
+        firebase_admin.initialize_app(cred)
 
     def add_stock_data(self, stock_id: str, data: Dict[str, Dict[str, Any]]):
         for key, value in track(
@@ -104,3 +114,11 @@ class DataBase:
         for doc in docs:
             df = df.append(doc.to_dict(), ignore_index=True)
         return df
+
+    def get_stock_price(self, date, stock_id) -> float:
+        date_str = date.strftime("%Y%m%d")
+        doc = self.db.document(f"stock/{stock_id}/main/{date_str}").get()
+        if doc.exists:
+            return doc.to_dict()["Close"]
+        else:
+            return 0

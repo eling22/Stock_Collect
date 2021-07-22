@@ -2,9 +2,7 @@ import datetime as dt
 from collections import defaultdict
 from typing import DefaultDict, Dict
 
-import matplotlib.dates as mdates  # type: ignore
-import matplotlib.pylab as plt  # type: ignore
-from matplotlib.ticker import FormatStrFormatter  # type: ignore
+
 from rich import print
 
 from stock_collect.database.database import DataBase
@@ -16,45 +14,6 @@ def test_crawl_data():
     QUERY_STRING = "fugletrade 交易明細"
     SAVE_FOLDER = "att_files"
     crawl_excel_files(QUERY_STRING, SAVE_FOLDER)
-
-
-def test_draw_trade_data_view():
-    # the search string for only show the email with the string
-    USER_UID = "z1KBIEE1QFXYzB2lE6f5hI9ArfR2"
-
-    db = DataBase(USER_UID)
-    df = db.get_trade_data()
-    # df.to_csv("trade_data.csv")
-    print(df)
-    money_data = defaultdict(int)
-    stock_data: Dict[str, DefaultDict[str, int]] = {}
-    money = 0.0
-    stock = StockInventory()
-    for x in df.values:
-        [trade_type, code, ch_name, num, price, fee, tax, date] = x
-        money -= fee
-        if trade_type == "buy":
-            money -= num * price
-            stock.add(code, num)
-        else:  # sell
-            money += num * price
-            money -= tax
-            stock.remove(code, num)
-        date = dt.datetime.strptime(str(date), "%Y%m%d").date()
-        money_data[date] = money
-        stock_data[date] = stock.stock
-
-    print(stock_data)
-
-    lists = sorted(money_data.items())
-    x, y = zip(*lists)
-
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%Y/%m/%d"))
-    plt.gca().yaxis.set_major_formatter(FormatStrFormatter("%d"))
-    plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=90))
-    plt.plot(x, y)
-    plt.gcf().autofmt_xdate()
-    plt.show()
 
 
 def test_get_data_from_db():

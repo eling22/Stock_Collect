@@ -12,3 +12,6 @@ better :
 
 run:
 	poetry run main
+
+view :
+	pytest -s .\tests\test_view.py::test_draw_trade_data_view

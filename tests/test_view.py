@@ -1,20 +1,17 @@
+import datetime as dt
+from collections import defaultdict
+from copy import deepcopy
 from multiprocessing.pool import ThreadPool
+from typing import DefaultDict, Dict
+
 import matplotlib.dates as mdates  # type: ignore
 import matplotlib.pylab as plt  # type: ignore
 from matplotlib.ticker import FormatStrFormatter  # type: ignore
-
-import datetime as dt
-from collections import defaultdict
-from typing import DefaultDict, Dict
-
-
 from rich import print
+from rich.progress import track
 
 from stock_collect.database.database import DataBase
-from stock_collect.fetch_trade_data.message import crawl_excel_files
 from tests.stock_inventory import StockInventory
-from rich.progress import track
-from copy import deepcopy
 
 
 def test_draw_trade_data_view():
@@ -54,9 +51,11 @@ def test_draw_trade_data_view():
     with ThreadPool(100) as p:
 
         def func(data):
-            print(data)
+            stock: StockInventory
+            date: dt.datetime
             date, stock = data
-            return (date, stock.to_money())
+            money = stock.to_money()
+            return (date, money)
 
         res = p.map(func, stock_data.items())
         print("finish")

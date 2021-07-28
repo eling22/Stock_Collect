@@ -1,10 +1,11 @@
 from datetime import datetime
+from typing import Any, Dict, List
+
+from google.api_core.exceptions import RetryError  # type : ignore
+
 from stock_collect.database.database import DataBase
 from stock_collect.fetch_stock_data.stock_price import StockPrice
 from stock_collect.fetch_trade_data.data_process import get_df_from_excel
-from stock_collect.fetch_trade_data.data_process import dump_json, get_df_from_excel
-from google.api_core.exceptions import RetryError
-from typing import Dict, Any, List
 
 
 class MockDataBase:
@@ -32,7 +33,7 @@ def patch_database(mocker):
 def test_parse_stock_data(mocker):
     SAVE_FOLDER = "att_files"
     start_date = datetime(2019, 1, 1)
-    patch_database(mocker)
+    # patch_database(mocker)
     df = get_df_from_excel(SAVE_FOLDER)
     db = DataBase()
     stock = StockPrice(db)

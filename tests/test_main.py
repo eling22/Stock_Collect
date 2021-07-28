@@ -1,13 +1,7 @@
-import datetime as dt
-from collections import defaultdict
-from typing import DefaultDict, Dict
-
-
 from rich import print
 
 from stock_collect.database.database import DataBase
 from stock_collect.fetch_trade_data.message import crawl_excel_files
-from tests.stock_inventory import StockInventory
 
 
 def test_crawl_data():

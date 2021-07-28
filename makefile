@@ -8,7 +8,7 @@ better :
 			--in-place\
 			.
 	poetry run isort .
-	poetry run mypy .
+	poetry run mypy . --ignore-missing-imports
 
 run:
 	poetry run main

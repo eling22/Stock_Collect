@@ -1,9 +1,8 @@
 from collections import defaultdict
 from datetime import datetime
-from stock_collect.database.database import DataBase
 from typing import DefaultDict
 
-from numpy import float_power
+from stock_collect.database.database import DataBase
 
 
 class StockInventory:

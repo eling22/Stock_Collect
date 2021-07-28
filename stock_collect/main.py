@@ -1,10 +1,10 @@
+from google.api_core.exceptions import RetryError  # type : ignore
+
 from stock_collect.database.database import DataBase
 
 from .fetch_stock_data.stock_price import StockPrice
 from .fetch_trade_data.data_process import dump_json, get_df_from_excel
 from .fetch_trade_data.message import crawl_excel_files
-
-from google.api_core.exceptions import RetryError
 
 
 def main():

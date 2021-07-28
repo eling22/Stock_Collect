@@ -1,4 +1,5 @@
 import warnings
+from datetime import date, datetime, timedelta
 from typing import Any, Dict, List
 
 import firebase_admin  # type: ignore
@@ -6,7 +7,6 @@ from firebase_admin import credentials, firestore
 from pandas.core.frame import DataFrame  # type: ignore
 from rich import print
 from rich.progress import track
-from datetime import datetime
 
 
 class DataBase:
@@ -115,10 +115,26 @@ class DataBase:
             df = df.append(doc.to_dict(), ignore_index=True)
         return df
 
-    def get_stock_price(self, date, stock_id) -> float:
+    def get_stock_price(self, date: date, stock_id: str) -> float:
         date_str = date.strftime("%Y%m%d")
         doc = self.db.document(f"stock/{stock_id}/main/{date_str}").get()
         if doc.exists:
             return doc.to_dict()["Close"]
         else:
-            return 0
+            query = (
+                self.db.collection("stock")
+                .document(f"{stock_id}")
+                .collection("main")
+                .order_by("Date")
+                .limit(1)
+            )
+            docs = query.stream()
+            oldest_record_date = datetime.now().date()
+            warnings.simplefilter("ignore", ResourceWarning)
+            for doc in docs:
+                time: datetime = doc.to_dict()["Date"]
+                oldest_record_date = time.date()
+            if date < oldest_record_date:
+                return 0
+            one_day = timedelta(days=-1)
+            return self.get_stock_price(date - one_day, stock_id)

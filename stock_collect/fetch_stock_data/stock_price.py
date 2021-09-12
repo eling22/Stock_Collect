@@ -11,7 +11,7 @@ class StockPrice:
         self.db = db
         self.start_date = datetime(2000, 1, 1)
 
-    def update(self, list_of_all_stock: List[str], start_date: datetime):
+    def update(self, list_of_all_stock: List[str]):
         exist_stock = self.db.get_record_stock_id_list()
 
         for stock_id in list_of_all_stock:
@@ -20,7 +20,7 @@ class StockPrice:
                 last_update_time = datetime.strptime(last_update_time_str, "%Y%m%d")
                 self.fetch_from(stock_id, last_update_time)
             else:
-                self.fetch_from(stock_id, start_date)
+                self.fetch_from(stock_id, self.start_date)
 
     def fetch_from(self, stock_id: str, start_date: Optional[datetime]):
         stock = yf.Ticker(f"{stock_id}.TW")

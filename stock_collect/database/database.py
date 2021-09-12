@@ -115,6 +115,32 @@ class DataBase:
             df = df.append(doc.to_dict(), ignore_index=True)
         return df
 
+    def get_trade_data_by_stock_id(self, stock_id: str) -> DataFrame:
+        query = (
+            self.db.collection("trade_data")
+            .document(self.user)
+            .collection("trade_record")
+            .where("code", "==", stock_id)
+        )
+        docs = query.stream()
+
+        df = DataFrame(
+            columns=[
+                "trade_type",
+                "code",
+                "ch_name",
+                "num",
+                "price",
+                "fee",
+                "tax",
+                "date",
+            ]
+        )
+        for doc in docs:
+            df = df.append(doc.to_dict(), ignore_index=True)
+        df = df.sort_values(by=["date"])
+        return df
+
     def get_stock_price(self, date: date, stock_id: str) -> float:
         date_str = date.strftime("%Y%m%d")
         doc = self.db.document(f"stock/{stock_id}/main/{date_str}").get()
